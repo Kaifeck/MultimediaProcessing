@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<h1>Please Write the Number mathematically!</h1>
+<h2>Ursprüungliche Nummer:</h2>
+    <input type="text" id="fromConvert" placeholder="Die zu ändernde nummer"><br>
+<h2>Ursprüungliche Basis</h2>
+    <input type="number" id="fromBase" placeholder="Ursprüngliche Basis"><br>
+<h2>Gewünschte Basis</h2>
+    <input type="number" id="toBase" placeholder="Die gew&uuml;nschte Basis"><br><br>
+    <h2>Ergebnis</h2>
+    <input type="text" id="toConvert" placeholder="Ergebnis">
+    <button onclick="initializeVars()">Convert</button>
+</body>
+<script type="text/javascript">
+    var origNumberFromInput = 0;
+    var origBaseFromInput = 0;
+    var toConvertBaseFromInput = 0;
+    var origNumberFromInputArray;
+    var convertedToDecimal = 0;
+    function initializeVars() {
+        origNumberFromInput = document.getElementById('fromConvert').value;
+        origNumberFromInputArray =  origNumberFromInput.split(',');
+        origBaseFromInput = parseInt(document.getElementById('fromBase').value);
+        toConvertBaseFromInput = parseInt(document.getElementById('toBase').value);
+        convertNumber();
+    }
+    function logTest() {
+        console.log(origNumberFromInput);
+        console.log(origBaseFromInput);
+        console.log(toConvertBaseFromInput);
+        document.getElementById('toConvert').value = origNumberFromInput + origBaseFromInput + toConvertBaseFromInput;
+    }
+    function convertNumber() {
+        for(i = 0; i < origNumberFromInputArray.length; ++i)
+        {
+            convertedToDecimal += (Math.pow(origBaseFromInput, i) * origNumberFromInputArray[origNumberFromInputArray.length - i -1]);
+        }
+        toTargetBase();
+    }
+    function toTargetBase()
+    {
+        var convertNumberNewBaseReturn = '';
+        while(convertedToDecimal != 0)
+        {
+            convertNumberNewBaseReturn += (convertedToDecimal % toConvertBaseFromInput) + ',';
+            convertedToDecimal = Math.floor(convertedToDecimal/toConvertBaseFromInput);
+        }
+        convertNumberNewBaseReturn = convertNumberNewBaseReturn.slice(0,-1);
+        convertNumberNewBaseReturn = convertNumberNewBaseReturn.split(',');
+        flipString(convertNumberNewBaseReturn);
+    }
+    function flipString(numStringToFlip)
+    {
+        var stringToReturn = '';
+        for (j = 0; j < numStringToFlip.length; ++j)
+        {
+            stringToReturn = stringToReturn.concat(",");
+            /*console.log(stringToReturn);*/
+            stringToReturn = stringToReturn.concat(numStringToFlip[numStringToFlip.length - j - 1]);
+        }
+        stringToReturn = stringToReturn.slice(1);
+        document.getElementById('toConvert').value= stringToReturn;
+    }
+</script>
+</html>

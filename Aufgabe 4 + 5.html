@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<h1>Get the frequency of letters from a text</h1>
+<textarea rows="25" cols="50" id="textToAnalyze"></textarea>
+<textarea rows="40" cols="40" id="output"></textarea>
+<button onclick="pushToLibrary()">Convert</button>
+</body>
+<script type="text/javascript">
+    
+    var origText = '';
+    var wannabeLibrary = [[]];
+    var libraryWithRel = [[]];
+    var totalstring = '';
+
+    function pushToLibrary()
+    {
+        origText = document.getElementById('textToAnalyze').value.toLocaleLowerCase(); //get Input and convert to lower case
+        for (j = 0; j < origText.length; ++j)
+        {
+            var indexOfCurrentCharInLibrary = contains(origText.substring(j, j+1));
+            if (indexOfCurrentCharInLibrary > -1)
+            {
+                wannabeLibrary[indexOfCurrentCharInLibrary][1] = wannabeLibrary[indexOfCurrentCharInLibrary][1] + 1;
+            } else {
+                add(wannabeLibrary, origText.substring(j, j+1), 1);
+            }
+        }
+        calcRel();
+        var entrop = calcEntropy();
+        print(entrop);
+        libraryWithRel = [[]];
+        wannabeLibrary = [[]];
+    }
+
+    function add(library, key, value)
+    {
+        var localToPush = [key, value];
+        library.push(localToPush);
+    }
+
+    function contains(key)
+    {
+        var k = 0;
+        do{
+            if (wannabeLibrary[k][0] == key)
+            {
+                return k;
+            }
+            ++k;
+        } while (k < wannabeLibrary.length);
+        return -1;
+    }
+
+    function calcRel()
+    {
+        var c = 0;
+        while(c < wannabeLibrary.length)
+        {
+            var rel = wannabeLibrary[c][1] / origText.length;
+            add(libraryWithRel, wannabeLibrary[c][0], rel);
+            ++c;
+        }
+    }
+
+    function calcEntropy()
+    {
+        var entropy = 0;
+        for (x = 2; x < libraryWithRel.length; ++x)
+        {
+            entropy += (libraryWithRel[x][1]) * Math.log2(1/(libraryWithRel[x][1]));
+            console.log(origText.length);
+        }
+        return entropy;
+    }
+
+    function print(entropyToOut)
+    {
+        document.getElementById('output').value = '';
+        for (z = 2; z < libraryWithRel.length; ++z)
+        {
+            totalstring = totalstring.concat(libraryWithRel[z][0] + ' Häufigkeit:' + libraryWithRel[z][1] * 100 + '% \n');
+        }
+        totalstring = totalstring.concat(entropyToOut);
+        document.getElementById('output').value = totalstring;
+        totalstring = '';
+    }
+</script>
+</html>
